@@ -1,0 +1,93 @@
+[
+  {
+    "method": "GET",
+    "endpoint": "/kategorijos"
+  },
+  {
+    "method": "POST",
+    "endpoint": "/kategorijos",
+    "body": { "pavadinimas": "Fantastika" }
+  },
+  {
+    "method": "POST",
+    "endpoint": "/kategorijos",
+    "body": { "pavadinimas": "Romanas" }
+  },
+  {
+    "method": "POST",
+    "endpoint": "/kategorijos",
+    "body": { "pavadinimas": "Siaubas" }
+  },
+  {
+    "method": "GET",
+    "endpoint": "/kategorijos/1"
+  },
+  {
+    "method": "PUT",
+    "endpoint": "/kategorijos/1",
+    "body": { "pavadinimas": "Fantastika - atnaujinta" }
+  },
+  {
+    "method": "DELETE",
+    "endpoint": "/kategorijos/3"
+  },
+  {
+    "method": "GET",
+    "endpoint": "/knygos"
+  },
+  {
+    "method": "POST",
+    "endpoint": "/knygos",
+    "body": {
+      "pavadinimas": "Haris Poteris",
+      "autorius": "J.K. Rowling",
+      "aprasymas": "Magijos pasaulio nuotykiai.",
+      "isbn": "1234567890",
+      "kategorija_id": 1
+    }
+  },
+  {
+    "method": "POST",
+    "endpoint": "/knygos",
+    "body": {
+      "pavadinimas": "Mažasis Princas",
+      "autorius": "Antoine de Saint-Exupéry",
+      "aprasymas": "Filosofinė istorija apie draugystę.",
+      "isbn": "9876543210",
+      "kategorija_id": 2
+    }
+  },
+  {
+    "method": "GET",
+    "endpoint": "/knygos/1"
+  },
+  {
+    "method": "PUT",
+    "endpoint": "/knygos/1",
+    "body": {
+      "pavadinimas": "Haris Poteris",
+      "autorius": "J.K. Rowling",
+      "aprasymas": "Atnaujintas aprašymas",
+      "isbn": "1234567890",
+      "kategorija_id": 1
+    }
+  },
+  {
+    "method": "DELETE",
+    "endpoint": "/knygos/2"
+  },
+  {
+    "method": "GET",
+    "endpoint": "/kategorijos/1/knygos/1/rekomendacijos"
+  },
+  {
+    "method": "POST",
+    "endpoint": "/rekomendacijos",
+    "body": {
+      "knyga_id": 1,
+      "naudotojas": "Jonas",
+      "komentaras": "Nuostabi knyga!",
+      "ivertinimas": 5
+    }
+  }
+]

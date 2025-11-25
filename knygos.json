@@ -1,0 +1,29 @@
+[
+  {
+    "pavadinimas": "Dune",
+    "autorius": "Frank Herbert",
+    "aprasymas": "Klasikinė mokslinės fantastikos knyga.",
+    "isbn": "9780441013593",
+    "naudotojas": "Jonas",
+    "komentaras": "Puiki knyga!",
+    "ivertinimas": 5
+  },
+  {
+    "pavadinimas": "Haris Poteris ir išminties akmuo",
+    "autorius": "J. K. Rowling",
+    "aprasymas": "Pirmoji Harį Poterį pristatanti knyga.",
+    "isbn": "9780747532743",
+    "naudotojas": "Aistė",
+    "komentaras": "Labai įtraukianti!",
+    "ivertinimas": 4
+  },
+  {
+    "pavadinimas": "Fahrenheit 451",
+    "autorius": "Ray Bradbury",
+    "aprasymas": "Klasikinis distopinis romanas.",
+    "isbn": "9781451673319",
+    "naudotojas": "Mantas",
+    "komentaras": "Priverčia susimąstyti.",
+    "ivertinimas": 5
+  }
+]

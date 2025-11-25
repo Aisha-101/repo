@@ -1,0 +1,240 @@
+{
+  "info": {
+    "name": "Knygų rekomendacijos API (with tests)",
+    "_postman_id": "abcd1234-5678-efgh-ijkl-9876543210zz",
+    "description": "Tested API collection for Categories, Books, and Recommendations endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get all categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/kategorijos",
+              "protocol": "http",
+              "host": ["127.0.0.1"],
+              "port": "8000",
+              "path": ["api", "kategorijos"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create category",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"pavadinimas\": \"Nauja kategorija\"}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/kategorijos",
+              "protocol": "http",
+              "host": ["127.0.0.1"],
+              "port": "8000",
+              "path": ["api", "kategorijos"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Contains pavadinimas', function () { pm.expect(pm.response.json()).to.have.property('pavadinimas'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/kategorijos/1",
+              "protocol": "http",
+              "host": ["127.0.0.1"],
+              "port": "8000",
+              "path": ["api", "kategorijos", "1"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update category",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"pavadinimas\": \"Atnaujinta kategorija\"}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/kategorijos/1",
+              "protocol": "http",
+              "host": ["127.0.0.1"],
+              "port": "8000",
+              "path": ["api", "kategorijos", "1"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Updated field exists', function () { pm.expect(pm.response.json()).to.have.property('pavadinimas'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/kategorijos/1",
+              "protocol": "http",
+              "host": ["127.0.0.1"],
+              "port": "8000",
+              "path": ["api", "kategorijos", "1"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 204 or 200', function () { pm.expect([200, 204]).to.include(pm.response.code); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Books",
+      "item": [
+        {
+          "name": "Get all books",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/knygos",
+              "protocol": "http",
+              "host": ["127.0.0.1"],
+              "port": "8000",
+              "path": ["api", "knygos"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create book",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pavadinimas\": \"Nauja knyga\",\n  \"autorius\": \"Autorius Vardas\",\n  \"aprasymas\": \"Trumpas aprašymas\",\n  \"isbn\": \"978-3-16-148410-0\",\n  \"kategorija_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/knygos",
+              "protocol": "http",
+              "host": ["127.0.0.1"],
+              "port": "8000",
+              "path": ["api", "knygos"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+                  "pm.test('Contains title', function () { pm.expect(pm.response.json()).to.have.property('pavadinimas'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get recommendations for book in category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/kategorijos/1/knygos/1/rekomendacijos",
+              "protocol": "http",
+              "host": ["127.0.0.1"],
+              "port": "8000",
+              "path": ["api", "kategorijos", "1", "knygos", "1", "rekomendacijos"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200 or 404', function () { pm.expect([200, 404]).to.include(pm.response.code); });",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

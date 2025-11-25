@@ -1,0 +1,550 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Knygų rekomendacijos API",
+        "description": "API darbui su kategorijomis, knygomis ir rekomendacijomis",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Vietinis serveris"
+        }
+    ],
+    "paths": {
+        "/kategorijos": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get all categories",
+                "operationId": "c68d33e27ebbf97b3c4a4f0603ef7074",
+                "responses": {
+                    "200": {
+                        "description": "Successful request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Create a new category",
+                "operationId": "e1be0951e26b18c2b7c674ccdbc8a0d9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "pavadinimas"
+                                ],
+                                "properties": {
+                                    "pavadinimas": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/kategorijos/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get a single category",
+                "operationId": "3d2898192221d948420e6b047c1315e6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful request"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Update a category",
+                "operationId": "5f01292372f174c23fc3b630ec0ae2cd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "pavadinimas"
+                                ],
+                                "properties": {
+                                    "pavadinimas": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated successfully"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Delete a category",
+                "operationId": "5e8debec6f366fbcdcb96574e76d7e07",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted successfully"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/knygos": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get all books",
+                "operationId": "f2d9d2e8777f56bf718452129171bd0e",
+                "responses": {
+                    "200": {
+                        "description": "Successful request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Create a book",
+                "operationId": "6b6904fb0928dc7946e6753c3629de7c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "pavadinimas",
+                                    "autorius",
+                                    "isbn",
+                                    "kategorija_id"
+                                ],
+                                "properties": {
+                                    "pavadinimas": {
+                                        "type": "string"
+                                    },
+                                    "autorius": {
+                                        "type": "string"
+                                    },
+                                    "aprasymas": {
+                                        "type": "string"
+                                    },
+                                    "isbn": {
+                                        "type": "string"
+                                    },
+                                    "kategorija_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/knygos/{id}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get a single book",
+                "operationId": "9c6e407e93698427343ab9e2ee95041e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful request"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Update a book",
+                "operationId": "7f320550aec2e3df21fd92973b0ed88a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "pavadinimas",
+                                    "autorius",
+                                    "isbn",
+                                    "kategorija_id"
+                                ],
+                                "properties": {
+                                    "pavadinimas": {
+                                        "type": "string"
+                                    },
+                                    "autorius": {
+                                        "type": "string"
+                                    },
+                                    "aprasymas": {
+                                        "type": "string"
+                                    },
+                                    "isbn": {
+                                        "type": "string"
+                                    },
+                                    "kategorija_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated successfully"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Delete a book",
+                "operationId": "1045af98934478f4785cad1d76b46fb5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted successfully"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }
+            }
+        },
+        "/kategorijos/{kategorija}/knygos/{knyga}/rekomendacijos": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get recommendations for a book in a category",
+                "operationId": "2071b99cdf783767938bfbeffd31439e",
+                "parameters": [
+                    {
+                        "name": "kategorija",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "knyga",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful request"
+                    },
+                    "404": {
+                        "description": "Category or book not found"
+                    }
+                }
+            }
+        },
+        "/rekomendacijos": {
+            "get": {
+                "tags": [
+                    "Recommendations"
+                ],
+                "summary": "Get all recommendations",
+                "operationId": "352a26277b27b049c1713a29344e7e5e",
+                "responses": {
+                    "200": {
+                        "description": "Successful request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Recommendations"
+                ],
+                "summary": "Create a new recommendation",
+                "operationId": "225f8dbcdfb4f9030e794c2d9a8c5f1a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "knyga_id",
+                                    "naudotojas",
+                                    "komentaras",
+                                    "ivertinimas"
+                                ],
+                                "properties": {
+                                    "knyga_id": {
+                                        "type": "integer"
+                                    },
+                                    "naudotojas": {
+                                        "type": "string"
+                                    },
+                                    "komentaras": {
+                                        "type": "string"
+                                    },
+                                    "ivertinimas": {
+                                        "type": "integer",
+                                        "maximum": 5,
+                                        "minimum": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/rekomendacijos/{id}": {
+            "get": {
+                "tags": [
+                    "Recommendations"
+                ],
+                "summary": "Get a single recommendation",
+                "operationId": "866e08959cbfc205ccb2b236aad7eb9a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful request"
+                    },
+                    "404": {
+                        "description": "Recommendation not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Recommendations"
+                ],
+                "summary": "Update a recommendation",
+                "operationId": "a8de6697c8c339a1125a31faa1992129",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "komentaras",
+                                    "ivertinimas"
+                                ],
+                                "properties": {
+                                    "komentaras": {
+                                        "type": "string"
+                                    },
+                                    "ivertinimas": {
+                                        "type": "integer",
+                                        "maximum": 5,
+                                        "minimum": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated successfully"
+                    },
+                    "404": {
+                        "description": "Recommendation not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Recommendations"
+                ],
+                "summary": "Delete a recommendation",
+                "operationId": "d7af7a99c77e26a02aeaec4dc203c41d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted successfully"
+                    },
+                    "404": {
+                        "description": "Recommendation not found"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Categories",
+            "description": "API for managing categories"
+        },
+        {
+            "name": "Books",
+            "description": "API for managing books"
+        },
+        {
+            "name": "Recommendations",
+            "description": "API for managing recommendations"
+        }
+    ]
+}

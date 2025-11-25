@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "knyga_id": 1,
+    "naudotojas": "Jonas",
+    "komentaras": "Nuostabi knyga!",
+    "ivertinimas": 5
+  },
+  {
+    "id": 2,
+    "knyga_id": 1,
+    "naudotojas": "Aistė",
+    "komentaras": "Labai įtraukianti istorija.",
+    "ivertinimas": 4
+  },
+  {
+    "id": 3,
+    "knyga_id": 2,
+    "naudotojas": "Mantas",
+    "komentaras": "Klasika, verta perskaityti kiekvienam.",
+    "ivertinimas": 5
+  }
+]
