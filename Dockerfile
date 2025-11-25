@@ -16,6 +16,14 @@ RUN a2enmod rewrite
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . .
+# Copy .env separately if needed
+# COPY .env .   # optional if not already included above
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Generate app key
+RUN php artisan key:generate
 
 RUN composer install --optimize-autoloader --no-dev
 
