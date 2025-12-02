@@ -59,8 +59,15 @@ return [
         ],
 
         'securityDefinitions' => [
+             'bearerAuth' => [
+                'type' => 'apiKey',
+                'description' => 'Enter token in format: Bearer {your_token}',
+                'name' => 'Authorization',
+                'in' => 'header',
+            ],
             'securitySchemes' => [],
-            'security' => [],
+            'security' => [
+                'bearerAuth' => []],
         ],
 
         'generate_always' => env('L5_SWAGGER_GENERATE_ALWAYS', false),

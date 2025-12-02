@@ -12,7 +12,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        
+        // Register middleware aliases
+        $middleware->alias([
+            'auth.jwt' => \App\Http\Middleware\JwtMiddleware::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
+        ]);
+        // Apply CSRF protection except for API routes
         $middleware->validateCsrfTokens(except: [
             'api/*',
             'kategorijos/*',
