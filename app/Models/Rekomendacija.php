@@ -10,10 +10,17 @@ class Rekomendacija extends Model
     use HasFactory;
 
     protected $table = 'rekomendacijos';
-    protected $fillable = ['knyga_id', 'naudotojas', 'komentaras', 'ivertinimas'];
+    protected $fillable = ['knyga_id', 'naudotojas', 'komentaras', 'ivertinimas',
+    'user_id'];
 
     public function knyga()
     {
         return $this->belongsTo(Knyga::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

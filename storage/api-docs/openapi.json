@@ -127,6 +127,99 @@
                 ]
             }
         },
+        "/api/users/{id}/approve": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Approve a user (admin)",
+                "description": "Admin can approve a registered user",
+                "operationId": "196286d111f14bf9fe83ca1b04050163",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to approve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User approved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User approved successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden (not admin)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Forbidden"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/refresh": {
             "post": {
                 "tags": [
@@ -219,7 +312,12 @@
                     "422": {
                         "description": "Validation error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/kategorijos/{id}": {
@@ -292,7 +390,12 @@
                     "422": {
                         "description": "Validation error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -317,7 +420,12 @@
                     "404": {
                         "description": "Category not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "patch": {
                 "tags": [
@@ -360,7 +468,12 @@
                     "422": {
                         "description": "Validation error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/knygos": {
@@ -485,7 +598,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/knygos/{id}": {
@@ -581,19 +699,27 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Book not found"
                     },
                     "422": {
                         "description": "Validation error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
                     "Books"
                 ],
-                "summary": "Delete a book",
+                "summary": "Delete a book (owner only)",
                 "operationId": "e623648d2ffc040750f815f4b8479c1a",
                 "parameters": [
                     {
@@ -609,10 +735,21 @@
                     "204": {
                         "description": "Deleted successfully"
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Has recommendations"
+                    },
                     "404": {
                         "description": "Book not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "patch": {
                 "tags": [
@@ -681,7 +818,12 @@
                     "422": {
                         "description": "Validation error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/kategorijos/{kategorijaId}/knygos/{knygaId}/rekomendacijos": {
@@ -760,6 +902,35 @@
                 }
             }
         },
+        "/api/knygos/{id}/admin-delete": {
+            "delete": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Admin deletes a book",
+                "operationId": "b4f9a6d8f18e8fc29abd9df76514176c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted by admin"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/rekomendacijos": {
             "get": {
                 "tags": [
@@ -787,7 +958,6 @@
                             "schema": {
                                 "required": [
                                     "knyga_id",
-                                    "naudotojas",
                                     "komentaras",
                                     "ivertinimas"
                                 ],
@@ -795,10 +965,6 @@
                                     "knyga_id": {
                                         "type": "integer",
                                         "example": 2
-                                    },
-                                    "naudotojas": {
-                                        "type": "string",
-                                        "example": "Mantas"
                                     },
                                     "komentaras": {
                                         "type": "string",
@@ -843,7 +1009,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/rekomendacijos/{id}": {
@@ -894,12 +1065,6 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "knyga_id": {
-                                        "type": "integer"
-                                    },
-                                    "naudotojas": {
-                                        "type": "string"
-                                    },
                                     "komentaras": {
                                         "type": "string"
                                     },
@@ -918,13 +1083,21 @@
                     "200": {
                         "description": "Updated successfully"
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Recommendation not found"
                     },
                     "422": {
                         "description": "Validation error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -946,10 +1119,79 @@
                     "204": {
                         "description": "Deleted successfully"
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Recommendation not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/rekomendacijos/{id}/approve": {
+            "post": {
+                "tags": [
+                    "Recommendations"
+                ],
+                "summary": "Approve a recommendation (admin)",
+                "operationId": "9bf3f091677f23fc90d3dd6e74070164",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Approved"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/rekomendacijos/{id}/admin-delete": {
+            "delete": {
+                "tags": [
+                    "Recommendations"
+                ],
+                "summary": "Delete recommendation (admin)",
+                "operationId": "6860a5dce6029a338ed3dc4a51aa3160",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted by admin"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
@@ -1094,6 +1336,10 @@
         {
             "name": "Recommendations",
             "description": "API for managing recommendations"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
         }
     ]
 }

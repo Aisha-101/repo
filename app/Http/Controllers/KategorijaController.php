@@ -46,6 +46,7 @@ class KategorijaController extends Controller
      *     path="/api/kategorijos",
      *     tags={"Categories"},
      *     summary="Create a new category",
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\MediaType(
@@ -103,6 +104,7 @@ class KategorijaController extends Controller
      *     path="/api/kategorijos/{id}",
      *     tags={"Categories"},
      *     summary="Update a category",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -138,6 +140,7 @@ class KategorijaController extends Controller
      *     path="/api/kategorijos/{id}",
      *     tags={"Categories"},
      *     summary="Partially update a category",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -172,6 +175,7 @@ class KategorijaController extends Controller
      *     path="/api/kategorijos/{id}",
      *     tags={"Categories"},
      *     summary="Delete a category",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

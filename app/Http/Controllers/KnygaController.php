@@ -57,6 +57,7 @@ class KnygaController extends Controller
      *     path="/api/knygos",
      *     tags={"Books"},
      *     summary="Create a new book",
+     *     security={{"bearerAuth":{}}},
      *     description="Creates a new book. The `id` is auto-generated and should not be provided.",
      *     @OA\RequestBody(
      *         required=true,
@@ -102,8 +103,11 @@ class KnygaController extends Controller
             'kategorija_id' => 'required|exists:kategorijas,id'
         ]);
 
+        // priskirti knygą prisijungusiam naudotojui
+        $validated['user_id'] = auth()->id();
+
         $knyga = Knyga::create($validated);
-        $knyga->load('kategorija'); // Optional: include category
+        $knyga->load('kategorija');
         return response()->json($knyga, 201);
     }
 
@@ -134,6 +138,7 @@ class KnygaController extends Controller
      *     path="/api/knygos/{id}",
      *     tags={"Books"},
      *     summary="Update a book",
+     *     security={{"bearerAuth":{}}},
      *     description="Update all fields of a book. The `id` is auto-generated and should not be changed.",
      *     @OA\Parameter(
      *         name="id",
@@ -158,6 +163,7 @@ class KnygaController extends Controller
      *         description="Updated successfully",
      *         @OA\JsonContent(ref="#/components/schemas/Knyga")
      *     ),
+     *     @OA\Response(response=403, description="Forbidden"),
      *     @OA\Response(response=404, description="Book not found"),
      *     @OA\Response(response=422, description="Validation error")
      * )
@@ -166,6 +172,11 @@ class KnygaController extends Controller
         $knyga = Knyga::find($id);
         if (!$knyga) return response()->json(['message' => 'Nerasta'], 404);
         
+        // patikrinti ar knygos savininkas = naudotojas
+        if ($knyga->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Neturite teisės redaguoti šios knygos'], 403);
+        }
+
         $validated = $request->validate([
             'pavadinimas' => 'sometimes|required|string|max:255',
             'autorius' => 'sometimes|required|string|max:255',
@@ -183,6 +194,7 @@ class KnygaController extends Controller
     *     path="/api/knygos/{id}",
     *     tags={"Books"},
     *     summary="Partially update a book",
+    *     security={{"bearerAuth":{}}},
     *     description="Update one or more fields of a book. The `id` is auto-generated.",
     *     @OA\Parameter(
     *         name="id",
@@ -231,14 +243,17 @@ class KnygaController extends Controller
      * @OA\Delete(
      *     path="/api/knygos/{id}",
      *     tags={"Books"},
-     *     summary="Delete a book",
-     *     @OA\Parameter(
+     *     summary="Delete a book (owner only)",
+     *     security={{"bearerAuth":{}}},
+     *      @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(response=204, description="Deleted successfully"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=422, description="Has recommendations"),
      *     @OA\Response(response=404, description="Book not found")
      * )
      */
@@ -246,6 +261,12 @@ class KnygaController extends Controller
         $knyga = Knyga::find($id);
         if (!$knyga) return response()->json(['message' => 'Nerasta'], 404);
         
+        // gali trinti tik savininkas
+        if ($knyga->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Neturite teisės ištrinti šios knygos'], 403);
+        }
+
+
         // Check if book has recommendations before deleting
         if ($knyga->rekomendacijos && $knyga->rekomendacijos->count() > 0) {
             return response()->json([
@@ -321,6 +342,30 @@ class KnygaController extends Controller
         }
 
         return response()->json($rekomendacijos, 200);
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/knygos/{id}/admin-delete",
+     *     tags={"Books"},
+     *     summary="Admin deletes a book",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true),
+     *     @OA\Response(response=200, description="Deleted by admin"),
+     *     @OA\Response(response=404, description="Not found")
+     * )
+     */
+    public function adminDelete($id)
+    {
+        $knyga = Knyga::find($id);
+
+        if (!$knyga) {
+            return response()->json(['message' => 'Knyga nerasta'], 404);
+        }
+
+        $knyga->delete();
+
+        return response()->json(['message' => 'Knygą ištrynė administratorius']);
     }
 
 }

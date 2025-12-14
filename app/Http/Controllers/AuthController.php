@@ -127,6 +127,64 @@ class AuthController extends Controller
         auth('api')->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
+    /**
+     * @OA\Post(
+     *     path="/api/users/{id}/approve",
+     *     tags={"Users"},
+     *     summary="Approve a user (admin)",
+     *     description="Admin can approve a registered user",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the user to approve",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User approved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="User approved successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="User not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden (not admin)",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Forbidden")
+     *         )
+     *     )
+     * )
+     */
+    public function approveUser($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $user->approved = true; // turi būti stulpelis DB
+        $user->save();
+
+        return response()->json(['message' => 'User approved successfully']);
+    }
+
 
     /**
      * @OA\Post(

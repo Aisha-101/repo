@@ -10,7 +10,8 @@ class Knyga extends Model
     use HasFactory;
 
     protected $table = 'knygos';
-    protected $fillable = ['pavadinimas', 'autorius', 'aprasymas', 'isbn', 'kategorija_id'];
+    protected $fillable = ['pavadinimas', 'autorius', 'aprasymas', 'isbn', 'kategorija_id',
+    'user_id'];
 
     public function kategorija()
     {
@@ -21,4 +22,9 @@ class Knyga extends Model
     {
         return $this->hasMany(Rekomendacija::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

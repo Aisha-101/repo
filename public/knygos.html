@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knygos - Knygų rekomendacijos</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Heroicons SVG CDN -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+        /* --- General --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+        a { text-decoration: none; color: inherit; }
+
+        /* --- Header --- */
+        header {
+            background-color: #4A90E2;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+        nav ul { display: flex; list-style: none; gap: 1rem; }
+        nav li { transition: transform 0.3s; }
+        nav li:hover { transform: scale(1.1); }
+
+        /* --- Hamburger Menu --- */
+        .hamburger { display: none; cursor: pointer; }
+        .hamburger div { width: 25px; height: 3px; background-color: white; margin: 5px 0; transition: 0.3s; }
+
+        /* --- Content --- */
+        main { flex: 1; padding: 2rem; background-color: #F0F4F8; }
+        .books { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+        .book-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .book-card:hover { transform: translateY(-5px); }
+        .book-card img { width: 100%; height: auto; border-radius: 5px; margin-bottom: 0.5rem; }
+
+        /* --- Footer --- */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        footer div { flex: 1; }
+        footer h4 { margin-bottom: 1rem; }
+        footer a { color: #4A90E2; display: block; margin-bottom: 0.5rem; }
+
+        /* --- Modal --- */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+        .modal-content { background:white; padding:2rem; border-radius:8px; max-width:400px; width:90%; }
+        .close { cursor:pointer; float:right; font-size:1.2rem; }
+
+        /* --- Responsive --- */
+        @media (max-width:768px){
+            nav ul { display: none; flex-direction: column; background: #4A90E2; position: absolute; top: 60px; right: 0; width: 200px; padding: 1rem; }
+            nav ul.active { display: flex; }
+            .hamburger { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Knygos</div>
+    <nav>
+        <ul id="menu">
+            <li><a href="index.html">Pagrindinis</a></li>
+            <li><a href="knygos.html">Knygos</a></li>
+            <li><a href="rekomendacijos.html">Rekomendacijos</a></li>
+            <li><a href="profilis.html">Profilis</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <h2>Knygų sąrašas</h2>
+    <div class="books" id="books"></div>
+
+    <h2>Pridėti naują knygą</h2>
+    <form id="addBookForm">
+        <input type="text" id="pavadinimas" placeholder="Pavadinimas" required>
+        <input type="text" id="autorius" placeholder="Autorius" required>
+        <input type="text" id="isbn" placeholder="ISBN" required>
+        <select id="kategorija" required></select>
+        <textarea id="aprasymas" placeholder="Trumpas aprašymas"></textarea>
+        <button type="submit">Pridėti knygą</button>
+    </form>
+</main>
+
+<script>
+    const booksContainer = document.getElementById('books');
+    const kategorijaSelect = document.getElementById('kategorija');
+
+    // Užkrauti kategorijas į select
+    async function loadKategorijas(){
+        const res = await fetch('/api/kategorijos');
+        const data = await res.json();
+        kategorijaSelect.innerHTML = '';
+        data.forEach(k => {
+            kategorijaSelect.innerHTML += `<option value="${k.id}">${k.pavadinimas}</option>`;
+        });
+    }
+
+    // Užkrauti knygas
+    async function loadBooks(){
+        const res = await fetch('/api/knygos');
+        const books = await res.json();
+        booksContainer.innerHTML = '';
+        books.forEach(b => {
+            booksContainer.innerHTML += `
+                <div class="book-card">
+                    <h3>${b.pavadinimas}</h3>
+                    <p><strong>Autorius:</strong> ${b.autorius}</p>
+                    <p>${b.aprasymas || ''}</p>
+                    <p><strong>Kategorija:</strong> ${b.kategorija?.pavadinimas || ''}</p>
+                    <p><strong>ISBN:</strong> ${b.isbn}</p>
+                </div>`;
+        });
+    }
+
+    // Formos submit
+    document.getElementById('addBookForm').addEventListener('submit', async e=>{
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        if(!token){
+            alert('Turite būti prisijungę, kad pridėtumėte knygą.');
+            return;
+        }
+
+        const data = {
+            pavadinimas: document.getElementById('pavadinimas').value,
+            autorius: document.getElementById('autorius').value,
+            isbn: document.getElementById('isbn').value,
+            aprasymas: document.getElementById('aprasymas').value,
+            kategorija_id: kategorijaSelect.value
+        };
+
+        try {
+            const res = await fetch('/api/knygos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            if(res.ok){
+                alert('Knyga pridėta sėkmingai!');
+                e.target.reset();
+                loadBooks();
+            } else {
+                const err = await res.json();
+                alert(err.message || 'Klaida pridedant knygą');
+            }
+        } catch(error){
+            alert('Tinklo klaida: ' + error.message);
+        }
+    });
+
+    // Pradinis užkrovimas
+    loadKategorijas();
+    loadBooks();
+</script>
+
+
+<footer>
+    <div>
+        <h4>Kontaktai</h4>
+        <a href="#">Email</a>
+        <a href="#">Telefonas</a>
+    </div>
+    <div>
+        <h4>Social</h4>
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+    </div>
+</footer>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <p id="modalText">Modal informacija</p>
+    </div>
+</div>
+
+<script>
+    // Hamburger toggle
+    const hamburger = document.getElementById('hamburger');
+    const menu = document.getElementById('menu');
+    hamburger.addEventListener('click', () => menu.classList.toggle('active'));
+
+    // Modal logic
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('closeModal');
+    function showModal(text) {
+        document.getElementById('modalText').innerText = text;
+        modal.style.display = 'flex';
+    }
+    closeModal.onclick = () => modal.style.display = 'none';
+    window.onclick = (e) => { if(e.target==modal) modal.style.display='none'; }
+
+    // Fetch API example for books
+    async function loadBooks(){
+        const res = await fetch('/api/knygos');
+        const books = await res.json();
+        const container = document.getElementById('books');
+        container.innerHTML = '';
+        books.forEach(b => {
+            container.innerHTML += `
+                <div class="book-card">
+                    <h3>${b.pavadinimas}</h3>
+                    <p>${b.autorius}</p>
+                    <p>${b.aprasymas || ''}</p>
+                </div>`;
+        });
+    }
+    loadBooks();
+
+    // Feather icons replacement
+    feather.replace();
+</script>
+
+</body>
+</html>

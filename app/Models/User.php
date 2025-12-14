@@ -35,9 +35,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
-    /**
-    * Add custom claims (we add the role here so it's inside the token)
-    */
+
     public function getJWTCustomClaims()
     {
         return [

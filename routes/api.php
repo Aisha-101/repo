@@ -11,7 +11,8 @@ Route::get('kategorijos', [KategorijaController::class, 'index']); // Viešos ka
 Route::get('knygos', [KnygaController::class, 'index']); // Populiariausios knygos
 Route::get('/kategorijos/{kategorijaId}/knygos/{knygaId}/rekomendacijos', 
     [KnygaController::class, 'rekomendacijosPagalKategorija']); // Viešos rekomendacijos
-
+Route::get('rekomendacijos', [RekomendacijaController::class, 'index']);
+Route::get('rekomendacijos/{id}', [RekomendacijaController::class, 'show']);
 // Auth susiję route'ai – prisijungimas / registracija / atnaujinimas
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);

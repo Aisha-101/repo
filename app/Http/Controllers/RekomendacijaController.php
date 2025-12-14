@@ -48,13 +48,13 @@ class RekomendacijaController extends Controller
      *     path="/api/rekomendacijos",
      *     tags={"Recommendations"},
      *     summary="Create a new recommendation",
+     *     security={{"bearerAuth":{}}},
      *     description="Create a new recommendation for a book",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"knyga_id","naudotojas","komentaras","ivertinimas"},
+     *             required={"knyga_id","komentaras","ivertinimas"},
      *             @OA\Property(property="knyga_id", type="integer", example=2),
-     *             @OA\Property(property="naudotojas", type="string", example="Mantas"),
      *             @OA\Property(property="komentaras", type="string", example="Klasika, verta perskaityti kiekvienam."),
      *             @OA\Property(property="ivertinimas", type="integer", example=5, minimum=1, maximum=5)
      *         )
@@ -76,13 +76,16 @@ class RekomendacijaController extends Controller
     public function store(Request $request) {
         $validated = $request->validate([
             'knyga_id' => 'required|exists:knygos,id',
-            'naudotojas' => 'required|string|max:255',
             'komentaras' => 'required|string',
             'ivertinimas' => 'required|integer|min:1|max:5'
         ]);
         
+        $validated['naudotojas'] = auth('api')->user()->name;
+        $validated['user_id'] = auth()->id();
+
         $rek = Rekomendacija::create($validated);
         $rek->load('knyga');
+
         return response()->json($rek, 201);
     }
 
@@ -108,17 +111,18 @@ class RekomendacijaController extends Controller
      *     path="/api/rekomendacijos/{id}",
      *     tags={"Recommendations"},
      *     summary="Update a recommendation",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             @OA\Property(property="knyga_id", type="integer"),
-     *             @OA\Property(property="naudotojas", type="string"),
+     *     
      *             @OA\Property(property="komentaras", type="string"),
      *             @OA\Property(property="ivertinimas", type="integer", minimum=1, maximum=5)
      *         )
      *     ),
      *     @OA\Response(response=200, description="Updated successfully"),
+     *     @OA\Response(response=403, description="Forbidden"),
      *     @OA\Response(response=404, description="Recommendation not found"),
      *     @OA\Response(response=422, description="Validation error")
      * )
@@ -127,9 +131,12 @@ class RekomendacijaController extends Controller
         $rek = Rekomendacija::find($id);
         if (!$rek) return response()->json(['message' => 'Nerasta'], 404);
         
+        if ($rek->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Neturite teisės redaguoti šios rekomendacijos'], 403);
+        }
+
         $validated = $request->validate([
-            'knyga_id' => 'sometimes|required|exists:knygos,id',
-            'naudotojas' => 'sometimes|required|string|max:255',
+            
             'komentaras' => 'sometimes|required|string',
             'ivertinimas' => 'sometimes|required|integer|min:1|max:5'
         ]);
@@ -144,16 +151,74 @@ class RekomendacijaController extends Controller
      *     path="/api/rekomendacijos/{id}",
      *     tags={"Recommendations"},
      *     summary="Delete a recommendation",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=204, description="Deleted successfully"),
+     *     @OA\Response(response=403, description="Forbidden"),
      *     @OA\Response(response=404, description="Recommendation not found")
      * )
      */
     public function destroy($id) {
+
         $rek = Rekomendacija::find($id);
         if (!$rek) return response()->json(['message' => 'Nerasta'], 404);
         
+        if ($rek->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Neturite teisės trinti šios rekomendacijos'], 403);
+        }
+
         $rek->delete();
         return response()->json(null, 204);
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/rekomendacijos/{id}/approve",
+     *     tags={"Recommendations"},
+     *     summary="Approve a recommendation (admin)",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Approved"),
+     *     @OA\Response(response=404, description="Not found")
+     * )
+     */
+    public function approve($id)
+    {
+        $rekomendacija = Rekomendacija::find($id);
+
+        if (!$rekomendacija) {
+            return response()->json(['message' => 'Rekomendacija nerasta'], 404);
+        }
+
+        $rekomendacija->approved = true;
+        $rekomendacija->save();
+
+        return response()->json(['message' => 'Rekomendacija patvirtinta sėkmingai']);
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/rekomendacijos/{id}/admin-delete",
+     *     tags={"Recommendations"},
+     *     summary="Delete recommendation (admin)",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true),
+     *     @OA\Response(response=200, description="Deleted by admin"),
+     *     @OA\Response(response=404, description="Not found")
+     * )
+     */
+    public function adminDelete($id)
+    {
+        $rekomendacija = Rekomendacija::find($id);
+
+        if (!$rekomendacija) {
+            return response()->json(['message' => 'Rekomendacija nerasta'], 404);
+        }
+
+        $rekomendacija->delete();
+
+        return response()->json(['message' => 'Rekomendaciją ištrynė administratorius']);
+    }
+
+
 }  
