@@ -1,0 +1,315 @@
+openapi: 3.1.0
+
+info:
+  title: Knygų rekomendacijos API
+  description: API darbui su kategorijomis, knygomis ir rekomendacijomis
+  version: 1.0.0
+
+paths:
+
+  /api/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password, password_confirmation]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+      responses:
+        '200':
+          description: Successful registration
+
+  /api/login:
+    post:
+      tags: [Auth]
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful login
+        '401':
+          description: Unauthorized
+
+  /api/me:
+    get:
+      tags: [Auth]
+      summary: Get authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User data
+
+  /api/logout:
+    post:
+      tags: [Auth]
+      summary: Log out the user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logged out successfully
+
+  /api/users/{id}/approve:
+    post:
+      tags: [Users]
+      summary: Approve a user (admin)
+      description: Admin can approve a registered user
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User approved successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: User not found
+
+  /api/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh JWT token
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Token refreshed successfully
+
+  /api/kategorijos:
+    get:
+      tags: [Categories]
+      summary: Get all categories
+      responses:
+        '200':
+          description: Successful request
+
+    post:
+      tags: [Categories]
+      summary: Create a new category
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pavadinimas]
+              properties:
+                pavadinimas:
+                  type: string
+      responses:
+        '201':
+          description: Created successfully
+        '422':
+          description: Validation error
+
+  /api/kategorijos/{id}:
+    get:
+      tags: [Categories]
+      summary: Get a single category
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful request
+        '404':
+          description: Category not found
+
+    put:
+      tags: [Categories]
+      summary: Update a category
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pavadinimas]
+              properties:
+                pavadinimas:
+                  type: string
+      responses:
+        '200':
+          description: Updated successfully
+        '404':
+          description: Category not found
+
+    delete:
+      tags: [Categories]
+      summary: Delete a category
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted successfully
+
+  /api/knygos:
+    get:
+      tags: [Books]
+      summary: Get all books
+      responses:
+        '200':
+          description: Successful request
+
+    post:
+      tags: [Books]
+      summary: Create a new book
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pavadinimas, autorius, isbn, kategorija_id]
+              properties:
+                pavadinimas:
+                  type: string
+                autorius:
+                  type: string
+                aprasymas:
+                  type: string
+                isbn:
+                  type: string
+                kategorija_id:
+                  type: integer
+      responses:
+        '201':
+          description: Created successfully
+        '422':
+          description: Validation error
+
+  /api/rekomendacijos:
+    get:
+      tags: [Recommendations]
+      summary: Get all recommendations
+      responses:
+        '200':
+          description: Successful request
+
+    post:
+      tags: [Recommendations]
+      summary: Create a new recommendation
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [knyga_id, komentaras, ivertinimas]
+              properties:
+                knyga_id:
+                  type: integer
+                komentaras:
+                  type: string
+                ivertinimas:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+      responses:
+        '201':
+          description: Created successfully
+        '422':
+          description: Validation error
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Kategorija:
+      type: object
+      required: [pavadinimas]
+      properties:
+        id:
+          type: integer
+        pavadinimas:
+          type: string
+
+    Knyga:
+      type: object
+      required: [pavadinimas, autorius, isbn, kategorija_id]
+      properties:
+        id:
+          type: integer
+        pavadinimas:
+          type: string
+        autorius:
+          type: string
+        aprasymas:
+          type: string
+        isbn:
+          type: string
+        kategorija_id:
+          type: integer
+
+    Rekomendacija:
+      type: object
+      required: [knyga_id, naudotojas, ivertinimas]
+      properties:
+        id:
+          type: integer
+        knyga_id:
+          type: integer
+        naudotojas:
+          type: string
+        komentaras:
+          type: string
+        ivertinimas:
+          type: integer
