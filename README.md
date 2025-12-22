@@ -1,207 +1,108 @@
-<!DOCTYPE html>
-<html lang="lt">
-<head>
-    <meta charset="UTF-8">
-    <title>Knygų rekomendacijų sistema – Projekto ataskaita</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+# Knygų rekomendacijų sistema
 
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 1.6;
-            margin: 40px;
-            color: #222;
-        }
-        h1, h2, h3 {
-            color: #1a1a1a;
-            margin-top: 1.5em;
-        }
-        h1 {
-            border-bottom: 2px solid #444;
-            padding-bottom: 0.3em;
-        }
-        h2 {
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 0.2em;
-        }
-        ul {
-            margin-left: 20px;
-        }
-        code, pre {
-            background: #f4f4f4;
-            padding: 10px;
-            display: block;
-            overflow-x: auto;
-        }
-        section {
-            margin-bottom: 40px;
-        }
-    </style>
-</head>
-<body>
+## 1. Sprendžiamo uždavinio aprašymas
 
-<h1>Knygų rekomendacijų sistema</h1>
+### 1.1 Sistemos paskirtis
+Knygų rekomendacijų sistema skirta naudotojams peržiūrėti knygas, pateikti jų rekomendacijas ir vertinimus, o administratoriams – valdyti sistemos turinį. Sistema realizuota kaip REST principais pagrįsta informacinė sistema su atskirta naudotojo sąsaja.
 
-<section>
-    <h2>1. Sprendžiamo uždavinio aprašymas</h2>
+Sistema leidžia efektyviai valdyti knygų katalogą, rekomendacijų turinį ir naudotojų prieigos teises.
 
-    <h3>1.1 Sistemos paskirtis</h3>
-    <p>
-        Knygų rekomendacijų sistema skirta naudotojams peržiūrėti knygas,
-        pateikti jų rekomendacijas ir vertinimus, o administratoriams –
-        valdyti sistemos turinį. Sistema realizuota kaip REST principais
-        pagrįsta informacinė sistema su atskirta naudotojo sąsaja.
-    </p>
-    <p>
-        Sistema leidžia efektyviai valdyti knygų katalogą, rekomendacijų
-        turinį ir naudotojų prieigos teises.
-    </p>
-</section>
+## 2. Funkciniai reikalavimai
 
-<section>
-    <h2>2. Funkciniai reikalavimai</h2>
+### 2.1 Bendri naudotojai
+- Peržiūrėti knygų kategorijas
+- Peržiūrėti knygų sąrašą
+- Peržiūrėti knygų rekomendacijas
+- Registruotis ir prisijungti prie sistemos
 
-    <h3>2.1 Bendri naudotojai</h3>
-    <ul>
-        <li>Peržiūrėti knygų kategorijas</li>
-        <li>Peržiūrėti knygų sąrašą</li>
-        <li>Peržiūrėti knygų rekomendacijas</li>
-        <li>Registruotis ir prisijungti prie sistemos</li>
-    </ul>
+### 2.2 Autentifikuoti naudotojai
+- Kurti, redaguoti ir šalinti savo knygas
+- Kurti, redaguoti ir šalinti savo rekomendacijas
+- Gauti savo naudotojo informaciją
+- Atsijungti nuo sistemos
 
-    <h3>2.2 Autentifikuoti naudotojai</h3>
-    <ul>
-        <li>Kurti, redaguoti ir šalinti savo knygas</li>
-        <li>Kurti, redaguoti ir šalinti savo rekomendacijas</li>
-        <li>Gauti savo naudotojo informaciją</li>
-        <li>Atsijungti nuo sistemos</li>
-    </ul>
+### 2.3 Administratorius
+- Kurti, redaguoti ir šalinti kategorijas
+- Tvirtinti naudotojų registracijas
+- Tvirtinti rekomendacijas
+- Šalinti bet kurias knygas ir rekomendacijas
 
-    <h3>2.3 Administratorius</h3>
-    <ul>
-        <li>Kurti, redaguoti ir šalinti kategorijas</li>
-        <li>Tvirtinti naudotojų registracijas</li>
-        <li>Tvirtinti rekomendacijas</li>
-        <li>Šalinti bet kurias knygas ir rekomendacijas</li>
-    </ul>
-</section>
+## 3. Sistemos architektūra
+Sistema sukurta naudojant kliento–serverio architektūrą.
 
-<section>
-    <h2>3. Sistemos architektūra</h2>
+### 3.1 Architektūros komponentai
+- Kliento pusė: HTML, CSS, JavaScript
+- Serverio pusė: Laravel REST API
+- Duomenų bazė: MySQL
+- Autentifikacija: JWT (JSON Web Token)
 
-    <p>
-        Sistema sukurta naudojant kliento–serverio architektūrą.
-    </p>
+### 3.2 UML Deployment diagrama
+Sistemos diegimo diagrama sudaryta naudojant „Magic Systems Draw“ įrankį. Diagrama apima naudotojo naršyklę, programų serverį (Laravel) ir duomenų bazės serverį (MySQL).
 
-    <h3>3.1 Architektūros komponentai</h3>
-    <ul>
-        <li>Kliento pusė: HTML, CSS, JavaScript</li>
-        <li>Serverio pusė: Laravel REST API</li>
-        <li>Duomenų bazė: MySQL</li>
-        <li>Autentifikacija: JWT (JSON Web Token)</li>
-    </ul>
+![Deployment diagrama](docs/deployment-diagram.png)
 
-    <h3>3.2 UML Deployment diagrama</h3>
-    <p>
-        Sistemos diegimo diagrama sudaryta naudojant „Magic Systems Draw“
-        įrankį. Diagrama apima naudotojo naršyklę, programų serverį
-        (Laravel) ir duomenų bazės serverį (MySQL).
-    </p>
-    <p>
-        Diagramos failas pateiktas kataloge <code>docs/deployment-diagram.png</code>.
-    </p>
-</section>
+## 4. Naudotojo sąsajos projektas
 
-<section>
-    <h2>4. Naudotojo sąsajos projektas</h2>
+### 4.1 Wireframe projektavimas
+Suprojektuoti šių sąsajos langų wireframe’ai:
+- Pagrindinis puslapis
+- Knygų sąrašas
+- Rekomendacijų puslapis
+- Prisijungimo ir registracijos forma
+- Naudotojo profilis
 
-    <h3>4.1 Wireframe projektavimas</h3>
-    <p>
-        Suprojektuoti šių sąsajos langų wireframe’ai:
-    </p>
-    <ul>
-        <li>Pagrindinis puslapis</li>
-        <li>Knygų sąrašas</li>
-        <li>Rekomendacijų puslapis</li>
-        <li>Prisijungimo ir registracijos forma</li>
-        <li>Naudotojo profilis</li>
-    </ul>
+### 4.2 Naudotojo sąsajos realizacija
+- Responsive dizainas su lūžio tašku ties 768px
+- Prisitaikantys paveikslėliai (max-width: 100%)
+- Skirtingas Header, Content ir Footer stilius
+- Responsive meniu su hamburger navigacija
+- Modaliniai informaciniai langai
+- CSS animacijos ir perėjimai
+- Vektorinės ikonos (Feather Icons)
+- Google Fonts šriftai
+- Tinkleliu pagrįstas išdėstymas
 
-    <h3>4.2 Naudotojo sąsajos realizacija</h3>
-    <ul>
-        <li>Responsive dizainas su lūžio tašku ties 768px</li>
-        <li>Prisitaikantys paveikslėliai (max-width: 100%)</li>
-        <li>Skirtingas Header, Content ir Footer stilius</li>
-        <li>Responsive meniu su hamburger navigacija</li>
-        <li>Modaliniai informaciniai langai</li>
-        <li>CSS animacijos ir perėjimai</li>
-        <li>Vektorinės ikonos (Feather Icons)</li>
-        <li>Google Fonts šriftai</li>
-        <li>Tinkleliu pagrįstas išdėstymas</li>
-    </ul>
-</section>
+## 5. API specifikacija
+API aprašyta naudojant OpenAPI 3.1 standartą.
 
-<section>
-    <h2>5. API specifikacija</h2>
+Specifikacijos failas: `api-spec.yaml`
 
-    <p>
-        API aprašyta naudojant OpenAPI 3.1 standartą.
-    </p>
+### 5.1 Pagrindinės API grupės
+- Auth – autentifikacija ir autorizacija
+- Categories – kategorijų valdymas
+- Books – knygų valdymas
+- Recommendations – rekomendacijų valdymas
+- Users – naudotojų administravimas
 
-    <p>
-        Specifikacijos failas: <code>api-spec.yaml</code>
-    </p>
+Kiekvienam API metodui pateikti galimi atsako kodai, užklausų ir atsakymų pavyzdžiai bei autorizacijos reikalavimai.
 
-    <h3>5.1 Pagrindinės API grupės</h3>
-    <ul>
-        <li>Auth – autentifikacija ir autorizacija</li>
-        <li>Categories – kategorijų valdymas</li>
-        <li>Books – knygų valdymas</li>
-        <li>Recommendations – rekomendacijų valdymas</li>
-        <li>Users – naudotojų administravimas</li>
-    </ul>
+## 6. Projekto išvados
+Projekte sukurta pilnai veikianti knygų rekomendacijų sistema, atitinkanti REST architektūros principus. Sistema pasižymi aiškia struktūra, saugia autentifikacija ir patogia naudotojo sąsaja. OpenAPI specifikacija užtikrina sistemos plečiamumą ir testuojamumą.
 
-    <p>
-        Kiekvienam API metodui pateikti galimi atsako kodai,
-        užklausų ir atsakymų pavyzdžiai bei autorizacijos reikalavimai.
-    </p>
-</section>
+## 7. Naudotos technologijos
+- Laravel
+- PHP
+- MySQL
+- HTML5
+- CSS3
+- JavaScript
+- JWT
+- OpenAPI 3.1
+- Magic Systems Draw
 
-<section>
-    <h2>6. Projekto išvados</h2>
-    <p>
-        Projekte sukurta pilnai veikianti knygų rekomendacijų sistema,
-        atitinkanti REST architektūros principus. Sistema pasižymi aiškia
-        struktūra, saugia autentifikacija ir patogia naudotojo sąsaja.
-        OpenAPI specifikacija užtikrina sistemos plečiamumą ir testuojamumą.
-    </p>
-</section>
+## 8. Projekto struktūra
+├── app/
+├── routes/
+├── resources/
+│ └── views/
+├── public/
+├── api-spec.yaml
+└── docs/
+  └── deployment-diagram.png
 
-<section>
-    <h2>7. Naudotos technologijos</h2>
-    <ul>
-        <li>Laravel</li>
-        <li>PHP</li>
-        <li>MySQL</li>
-        <li>HTML5</li>
-        <li>CSS3</li>
-        <li>JavaScript</li>
-        <li>JWT</li>
-        <li>OpenAPI 3.1</li>
-        <li>Magic Systems Draw</li>
-    </ul>
-</section>
-
-<section>
-    <h2>9. Atitiktis reikalavimams</h2>
-    <ul>
-        <li>REST API realizuotas</li>
-        <li>Naudotojo sąsaja responsyvi</li>
-        <li>Pateikta OpenAPI specifikacija</li>
-        <li>Parengta UML diagrama</li>
-        <li>Paruošta pilna projekto dokumentacija</li>
-    </ul>
-</section>
-
-</body>
-</html>
+## 9. Atitiktis reikalavimams
+- REST API realizuotas
+- Naudotojo sąsaja responsyvi
+- Pateikta OpenAPI specifikacija
+- Parengta UML diagrama
+- Paruošta pilna projekto dokumentacija
